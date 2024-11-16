@@ -6,19 +6,22 @@ async function main() {
   const prx = fs.readFileSync(pfile, 'utf-8').split('\n').filter(Boolean);
   const aProxy = [];
   for (let i = 0; i < prx.length; i += 50) {
-    const results = await Promise.all(
-      prx.slice(i, i + 50).map(async prxy => {
+    const batch = prx.slice(i, i + 50);
+    await Promise.all(
+      batch.map(async (prxy) => {
         try {
-          const rspn = await fetch(`https://p01--boiling-frame--kw6dd7bjv2nr.code.run/check?ip=${prxy.split(',')[0]}&host=speed.cloudflare.com&port=${prxy.split(',')[1]}&tls=true`);
-          const data = await rspn.json();
+          const [ip, port] = prxy.split(',');
+          const response = await fetch(`https://p01--boiling-frame--kw6dd7bjv2nr.code.run/check?ip=${ip}&host=speed.cloudflare.com&port=${port}&tls=true`);
+          const data = await response.json();
           if (data.proxyip) {
-            console.log('Found active proxy: ' + prxy);
-            aProxy.push(prxy.filter(Boolean));
+            aProxy.push(prxy);
           }
-        } catch {}
-      }).flat()
+        } catch {
+        }
+      })
     );
   }
+
   fs.writeFileSync('checked.txt', aProxy.join('\n'), 'utf-8');
   console.log('DONE');
 }
