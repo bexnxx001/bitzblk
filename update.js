@@ -14,6 +14,7 @@ async function main() {
           const response = await fetch(`https://p01--boiling-frame--kw6dd7bjv2nr.code.run/check?ip=${ip}&host=speed.cloudflare.com&port=${port}&tls=true`);
           const data = await response.json();
           if (data.proxyip) {
+            console.log('found active proxy ' + prxy)
             aProxy.push(prxy);
           }
         } catch {
