@@ -20,7 +20,7 @@ jobs:
 
     - name: Update proxy status
       run: |
-        node ./test/update.js
+        node update.js
 
     - name: Commit and push changes
       run: |
